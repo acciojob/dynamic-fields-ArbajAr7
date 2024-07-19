@@ -1,44 +1,39 @@
-import React, { useState } from "react";
-import './../styles/App.css';
-import InputField from "./InputField";
+import React, { useState } from 'react';
+import NewInput from './NewInput';
 
 const App = () => {
-  const [fields, setFields] = useState([{ id: 1 }]);
+  const [currStudent, setCurrStudent] = useState([{id:Math.random()*100000,values:{name:'',age:''}}]);
 
-  const addMore = () => {
-    setFields([...fields, { id: fields.length ? fields[fields.length - 1].id + 1 : 1 }]);
-  };
+  function removeOne(button_id) {
+    setCurrStudent(currStudent.filter(student => student.id !== button_id));
+  }
 
-  const handleSubmit = () => {
-    const data = fields.map(field => {
-      const name = document.getElementById(`name${field.id}`).value;
-      const age = document.getElementById(`age${field.id}`).value;
-      return { name, age };
-    });
-    console.log(data);
-  };
-
-  const removeField = (id) => {
-    setFields(fields.filter(field => field.id !== id));
-  };
+  function addMore(e) {
+    e.preventDefault();
+    setCurrStudent([...currStudent,{id: Math.random() * 100000,values:{name:'',age:''}}]);
+  }
+  function handleInputChange(id,newValues){
+    setCurrStudent(currStudent.map(student=>student.id===id?{...student,values:newValues}:student))
+  }
+  function handleSubmit(e){
+    {
+      e.preventDefault();
+    
+      console.log(currStudent.map(student => student.values));
+    
+    }
+  }
 
   return (
     <div>
-      {fields.map((field, index) => (
-        <InputField 
-          key={field.id}
-          id={`if${index+1}`} 
-          divid={field.id} 
-          nameid={`name${index+1}`} 
-          ageid={`age${index+1}`} 
-          submitbtn={`submit${index+1}`} 
-          removeField={removeField} 
-        />
-      ))}
-      <button onClick={addMore}>Add More...</button>
-      <button onClick={handleSubmit}>Submit</button>
+       <form>
+        {
+          currStudent.map(student => <NewInput key={student.id} div_id={student.id} removeOne={removeOne}   onInputChange={handleInputChange} />)
+        }
+        <button onClick={addMore}>Add More...</button>
+        <button onClick={handleSubmit} type="submit">Submit</button>
+       </form>
     </div>
-  );
+  )
 }
-
-export default App;
+export default App
